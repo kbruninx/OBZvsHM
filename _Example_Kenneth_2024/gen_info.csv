@@ -1,0 +1,5 @@
+GenID;OnBus;Pmax;Type;Costs
+1;1;1000;Nuclear;10
+2;7;1000;Gas;50
+3;3;1000;Wind Offshore;0
+4;6;1000;Wind Onshore;0

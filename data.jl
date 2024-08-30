@@ -1,13 +1,14 @@
-df_node = CSV.read("_ModelsSchonheitAdjusted_LessTimeSteps_OBZ/node_info.csv", DataFrame)
-df_gen = CSV.read("_ModelsSchonheitAdjusted_LessTimeSteps_OBZ/gen_info.csv", DataFrame)
-df_load = CSV.read("_ModelsSchonheitAdjusted_LessTimeSteps_OBZ/load_info.csv", DataFrame)
-df_line = CSV.read("_ModelsSchonheitAdjusted_LessTimeSteps_OBZ/line_info.csv", DataFrame)
-df_DC = CSV.read("_ModelsSchonheitAdjusted_LessTimeSteps_OBZ/DC_info.csv", DataFrame)
-incidence = CSV.read("_ModelsSchonheitAdjusted_LessTimeSteps_OBZ/incidence.csv", DataFrame)
-incidence_dc = CSV.read("_ModelsSchonheitAdjusted_LessTimeSteps_OBZ/incidence_dc.csv", DataFrame)
-susceptance = CSV.read("_ModelsSchonheitAdjusted_LessTimeSteps_OBZ/susceptance.csv", DataFrame)
+df_node = CSV.read("./node_info.csv", DataFrame) # OK
 
-xf_renew = XLSX.readxlsx("_ModelsSchonheitAdjusted_LessTimeSteps_OBZ/data_renew_2015.xlsx")
+df_gen = CSV.read("./gen_info.csv", DataFrame) # OK 
+df_load = CSV.read("./load_info.csv", DataFrame) # OK 
+df_line = CSV.read("./line_info.csv", DataFrame) # OK 
+df_DC = CSV.read("./DC_info.csv", DataFrame) # OK 
+incidence = CSV.read("./incidence.csv", DataFrame) # OK 
+incidence_dc = CSV.read("./incidence_dc.csv", DataFrame) # OK 
+susceptance = CSV.read("./susceptance.csv", DataFrame) # OK
+
+xf_renew = XLSX.readxlsx("./data_renew_2015.xlsx") # OK
 df_pv = DataFrame(xf_renew["pv"][:][2:end,:], :auto)
 rename!(df_pv, Dict(names(df_pv)[i] => Symbol.(xf_renew["pv"][:][1,:])[i] for i = 1:ncol(df_pv)))
 df_wind = DataFrame(xf_renew["onshore"][:][2:end,:], :auto)
@@ -110,28 +111,28 @@ RES[t2+1:t3+1,findfirst(N.== 120)], RES[t2+1:t3+1,findfirst(N.== 123)], RES[t2+1
 RES[t3+1:t4,findfirst(N.== 119)], RES[t3+1:t4,findfirst(N.== 121)], RES[t3+1:t4,findfirst(N.== 122)] = zeros(length(up_temp)-1), zeros(length(up_temp)-1), zeros(length(up_temp)-1)
 RES[t3+1:t4,findfirst(N.== 120)], RES[t3+1:t4,findfirst(N.== 123)], RES[t3+1:t4,findfirst(N.== 124)] = down_temp_small.*GENCAP[findfirst(G .== all_g_in_n[120])], down_temp_small.*GENCAP[findfirst(G .== all_g_in_n[123])], down_temp_small.*GENCAP[findfirst(G .== all_g_in_n[124])]
 
- # Merge zone 1 and 4 because they are one island
- z14 = vcat(l_in_z[1], l_in_z[4])
- z14 = unique(z14)
- delete!(a.ext[:parameters][:l_in_z], 1)
- delete!(a.ext[:parameters][:l_in_z], 4)
- delete!(a.ext[:parameters][:l_in_z], 5)
- a.ext[:parameters][:l_in_z][1] = z14
- l_in_z = a.ext[:parameters][:l_in_z]
+#  # Merge zone 1 and 4 because they are one island
+#  z14 = vcat(l_in_z[1], l_in_z[4])
+#  z14 = unique(z14)
+#  delete!(a.ext[:parameters][:l_in_z], 1)
+#  delete!(a.ext[:parameters][:l_in_z], 4)
+#  delete!(a.ext[:parameters][:l_in_z], 5)
+#  a.ext[:parameters][:l_in_z][1] = z14
+#  l_in_z = a.ext[:parameters][:l_in_z]
 
-  # Merge zone 1 and 4 because they are one island
- z14 = vcat(n_in_z[1], n_in_z[4])
- temp1 = n_in_z[2].*1
- temp2 = n_in_z[3].*1
- filter!(e->e∉[119, 120, 121, 122, 123, 124],temp1)
- filter!(e->e∉[119, 120, 121, 122, 123, 124],temp2)
- filter!(e->e∉[119, 120, 121, 122, 123, 124],z14)
- a.ext[:parameters][:n_in_z_island] = Dict()
- n_in_z_island = a.ext[:parameters][:n_in_z_island]
- n_in_z_island[1] = z14
- n_in_z_island[2] = temp1
- n_in_z_island[3] = temp2
- a.ext[:parameters][:n_in_z_island] = n_in_z_island
+#   # Merge zone 1 and 4 because they are one island
+#  z14 = vcat(n_in_z[1], n_in_z[4])
+#  temp1 = n_in_z[2].*1
+#  temp2 = n_in_z[3].*1
+#  filter!(e->e∉[119, 120, 121, 122, 123, 124],temp1)
+#  filter!(e->e∉[119, 120, 121, 122, 123, 124],temp2)
+#  filter!(e->e∉[119, 120, 121, 122, 123, 124],z14)
+#  a.ext[:parameters][:n_in_z_island] = Dict()
+#  n_in_z_island = a.ext[:parameters][:n_in_z_island]
+#  n_in_z_island[1] = z14
+#  n_in_z_island[2] = temp1
+#  n_in_z_island[3] = temp2
+#  a.ext[:parameters][:n_in_z_island] = n_in_z_island
 
 # Create incidence_zonal matrix, which connects lines with zones
 incidence_zonal = zeros(length(L), length(Z))

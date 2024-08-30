@@ -12,16 +12,16 @@ using Gurobi
 using Cbc
 using DelimitedFiles
 
-cd("C://Users//KENISM//OneDrive - VITO//Documents//_Research_2022a_OffShoreBiddingZone//_Models") #may have to change
+cd(".//_Models") #may have to change
 
 a = Model(Gurobi.Optimizer)
 
 include("data.jl")
 
+# Choose market clearing function
 include("function_nodalclearing.jl")
 
 # include("function_zonalclearing_exact_HC.jl")
-
 # include("function_zonalclearing_GSK_SHC.jl")
 # include("function_zonalclearing_GSK_AHC.jl")
 
